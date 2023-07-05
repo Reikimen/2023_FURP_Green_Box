@@ -1,0 +1,3 @@
+In this folder, the usages of different components is added.
+The use of each component is illustrated with a project.
+Also, the "simple_hradware_test" is used to test whether the ESP8266 board could use properly.
