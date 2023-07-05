@@ -5,7 +5,7 @@
 
 // Set the PINs of the detectors and the controlled hardwares
 // detectors
-#define PIN_WATER 0
+#define PIN_WATER A0
 // CO2
 // The Controlled hardwares's PIN DEFINE
 // LED_PWM
