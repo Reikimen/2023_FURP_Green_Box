@@ -1,7 +1,6 @@
-# 2023_FURP_Plant_Box
+# 2023_FURP_Green_Box
 We, the FURP project team, had the requirement to manufacture a plant box capable of culturing lettuce properly. 
 
-# The design notes of the plant box hardware Sys Bata.0.2
 ver: 6.30 已敲定使用材料，用于7.10交付的硬件设计  
 已删除废案  
 PS: 因为本人使用的图床是SM.MS+Github，如果markdown中的图片无法打开，请科学上网
@@ -14,7 +13,8 @@ PS: 因为本人使用的图床是SM.MS+Github，如果markdown中的图片无�
 ## timeline
 - 6.28 下一次会议，(进实验室，采购回来的材料放的位置)
 - 6.30 计划敲定选用的元件，因为部分元件功能相同，需要测试
-- 7.10 Tony 要求的本地控制的方案，因为蔬菜种植需要时间
+- 7.05 下一次会议，最后一次采购
+- 7.10 Tony 要求的本地控制的方案，因为蔬菜种植需要时间（未进实验室顺延）
 
 ## Contents
 - 0.0 ESP8266 基础信息
@@ -42,10 +42,12 @@ PS: 因为本人使用的图床是SM.MS+Github，如果markdown中的图片无�
     - 3.3 能耗监测模块对传感器精度影响
 
 - 4.0 系统框架图
-
-- 5.0 引脚分配图
-
-- 6.0 函数功能表 
+    - 4.0 硬件组成
+    - 4.1 程序框架
+        - 4.1.1 引脚分配图
+        - 4.1.2 函数功能表 
+    - 4.2 联网框架
+- 备注
 
 
 # 0.0 ESP8266 基础信息
@@ -81,13 +83,23 @@ ESP8266/32 (Arduino)驱动SHT30获取温湿度：https://blog.csdn.net/qq_434158
 Arduino ESP8266实现无线温湿度监测：https://blog.csdn.net/mbjxking/article/details/117406101  
 
 ## 1.2 CO2传感器
-因为datasheet付费下载，附上链接。  
+- JW01 CO2传感器
+因为JW01-datasheet付费下载，附上链接。  
 JW01-CO2-V2.2数字信号空气质量模块规格书: https://max.book118.com/html/2022/0607/5143210143004240.shtm   
 以下为一些基本的属性：
-<a href="https://sm.ms/image/wYq8TIDLE9n4ZCm" target="_blank"><img src="https://s2.loli.net/2023/06/23/wYq8TIDLE9n4ZCm.png" ></a>
+<a href="https://sm.ms/image/wYq8TIDLE9n4ZCm" target="_blank"><img height = '200' img src="https://s2.loli.net/2023/06/23/wYq8TIDLE9n4ZCm.png" ></a>  
 可能有用的资料：  
 淘宝上别的商家提供的教程：https://pan.baidu.com/s/1_tPl6m6C32AkPFusqbmOpw?pwd=426d  
-博客，micropython中使用jw01二氧化碳传感器获取数据: https://blog.csdn.net/limaning/article/details/131156686 （树莓派pico）
+博客，micropython中使用jw01二氧化碳传感器获取数据: https://blog.csdn.net/limaning/article/details/131156686 （树莓派pico）  
+
+- 最后选用的二氧化碳传感器：  
+Infrared CO2 Sensor 400-5000ppm 二氧化碳传感器模块  
+<div align = center>
+<img height = '200' img src="https://cdn.jsdelivr.net/gh/Reikimen/Image@main/furp/20230706093204.png"/>
+</div>  
+相应的官网使用链接：  
+
+[SEN0219](https://wiki.dfrobot.com.cn/_SKU_SEN0219_Infrared_CO2_Sensor_400-5000ppm_%E4%BA%8C%E6%B0%A7%E5%8C%96%E7%A2%B3%E4%BC%A0%E6%84%9F%E5%99%A8%E6%A8%A1%E5%9D%97)
 
 ## 1.3 PH传感器(不适用)
 选用的PH传感器为，可充型  
@@ -104,6 +116,7 @@ https://item.taobao.com/item.htm?spm=a21n57.1.0.0.59f1523cDI8vUo&id=712234238518
 <div align = center>
 <img height="340" img src="https://s2.loli.net/2023/06/25/tIZH1cUwzs3WN45.png"/>
 </div>
+
 使用的资料暂未找到，需要去跟店家要，并且不知道它的型号，下周找PHD使用他的传感器
 
 ### 1.4.2 DFROBOT光线传感器
@@ -115,7 +128,6 @@ https://wiki.dfrobot.com.cn/_SKU_SEN0228_Gravity_Digital_Ambient_Light_Sensor%E6
 关断模式：0.5uA  
 接口：I2C  
 I2C地址：0x10  
-
 
 ## 1.5 摄像（ESP32-CAM）
 安信可提供的资料:  
@@ -132,10 +144,10 @@ ESP32-CAM规格书：https://docs.ai-thinker.com/_media/esp32/docs/esp32-cam_pro
 
 ## 1.6 水位传感器
 <div align = center>
-<img height="250" img src="https://s2.loli.net/2023/06/27/IpnCbctMyzTEsGj.jpg"/>
+<img height="200" img src="https://s2.loli.net/2023/06/27/IpnCbctMyzTEsGj.jpg"/>
 </div>
 <div align = center>
-<img height="294" img src="https://s2.loli.net/2023/06/27/hCgnMpGA9VvHFua.jpg"/>
+<img height="236" img src="https://s2.loli.net/2023/06/27/hCgnMpGA9VvHFua.jpg"/>
 </div>
 
 
@@ -157,19 +169,13 @@ ESP32-CAM规格书：https://docs.ai-thinker.com/_media/esp32/docs/esp32-cam_pro
 原计划，购买了6根0.5m防水的LED植物粉光灯带。使用2根照明，4根照明，6根照明进行粗糙的3级补光照明。分别记为一档，二档，三档照明。  
 
 设计方案B(6.27):
-首先使用电源适配器获得稳定的，能够提供大电流的5VDC电源,改变空占比。
+使用电源适配器获得稳定的，能够提供大电流的5VDC电源, 改变空占比。
 
-然后使用可编程的RGB灯带，使用MCU来控制颜色。与白色的LED灯带混用，来打造一个偏红和偏蓝的灯源。PS：单一颜色的LED，例如红色LED灯能提供的波长范围较小，只有+-10nm不到的频谱区间  
-
-<div align = center> 
-<img height="350" img src="https://s2.loli.net/2023/06/27/QYnZvi9RFrdK8ly.jpg"/>
-</div>
+然后使用可编程的RGB灯带，WS2812，使用MCU来控制颜色亮度。与白色的LED灯带混用，来打造一个偏红和偏蓝的灯源。PS：单一颜色的LED，例如红色LED灯能提供的波长范围较小，只有+-10nm不到的频谱区间  
 
 <div align = center> 
 <img height="600" img src="https://s2.loli.net/2023/06/27/dUAJf5OGF3MiQpa.jpg"/>
 </div>
-
-
 
 ## 2.3 加热模块（硅胶）
 硅胶加热板安装方式
@@ -202,7 +208,7 @@ ESP32-CAM规格书：https://docs.ai-thinker.com/_media/esp32/docs/esp32-cam_pro
 半导体制冷只能做到局部的降温。
 
 ## 2.5 风扇
-### 2.5.2 机箱风扇
+
 购买的为，双风扇带调速器  
 购买链接：https://item.taobao.com/item.htm?spm=a230r.1.14.32.53497bc3hta7z1&id=702562582969&ns=1&abbucket=15#detail
 
@@ -211,7 +217,8 @@ ESP32-CAM规格书：https://docs.ai-thinker.com/_media/esp32/docs/esp32-cam_pro
 </div>
 
 根据目前的设计来看，双风扇机箱风扇是合适的，并且可以做到无极调节。  
-但是我打算把它自带的适配器换成自己的12V电压的适配器，并且使用空占比来调节风扇功率（参考2.1）
+但是我打算把它自带的适配器换成自己的12V电压的适配器，并且使用空占比来调节风扇功率（参考2.1）(PWM调节产生了巨大的噪声)
+因此，风扇的速度控制使用10K电阻分压器，使用SG90进行角度控制（不知道为啥手上这款只能转90°，但是也够用）
 
 ### 2.6 LCD1602
 常用的液晶显示屏，I2C连接
@@ -232,37 +239,38 @@ https://wiki.dfrobot.com.cn/_SKU_SEN0291__Gravity_I2C%E6%95%B0%E5%AD%97%E5%8A%9F
 ## 3.3 传感模块对传感器精度影响
 需要对比验证，根据实验具体情况具体分析 (江帆)
 
-# 4.0 系统框架 *未定
-flowchart  
-  
-7.10 系统组成 
+# 4.0 系统框架
+## 4.0 硬件组成
+GreenBox.0.1.x 系统组成 
 一个LCD显示屏  
 一个温湿度传感器  
 一个二氧化碳传感器  
 一个光敏传感器  
 一个水位传感器  
-220转5V8A电源适配器 + PWM放大模块 + 5-10 个照明灯带 + 能耗检测模块  
+220转5V8A电源适配器 + 5-10 个照明灯带  
 硅胶加热板(待调参) + MOS开关  
 制冷模块+ MOS开关  
-220转12V2A电源适配器 + PWM放大模块 俩个风扇 + 能耗检测模块  
+220转12V2A电源适配器 + SG90 + 俩个风扇  
+能耗检测模块
 
+下一个子版本需要添加的：ESP32 CAM
 
-# 5.0 引脚分配图 *未定
+## 4.1 程序框架
+flowchart
+### 4.1.1 引脚分配图 *未定
 
 |对应元件|功能|引脚|*|引脚|功能|对应元件|
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 |日奈|宫子|伊吕波|*|美游|未花|小梓|
 |日奈|宫子|伊吕波|*|美游|未花|小梓|
 
-
-# 6.0 函数功能表 *未定
+### 4.1.2 函数功能表 *未定
 |函数名|函数作用|备注|
 |:---|:---|:---|
 |日奈|伊吕波|未花|
 |日奈|伊吕波|未花|
 
-  
-  
+## 4.2 联网框架
   
 
 
@@ -271,11 +279,7 @@ flowchart
 还有比如它的二氧化碳传感器模块：
 [DFROBOT的二氧化碳传感器](https://wiki.dfrobot.com.cn/_SKU_SEN0159_CO2_%E4%BA%8C%E6%B0%A7%E5%8C%96%E7%A2%B3%E4%BC%A0%E6%84%9F%E5%99%A8%E6%A8%A1%E5%9D%97_V2)  
 
-
-
-
-
-
+SG90连接在ESP8266上时无法烧录（电脑USB口提供的电流不够大）目前设想，将SG90换一个
 
 
 <!--链接-->

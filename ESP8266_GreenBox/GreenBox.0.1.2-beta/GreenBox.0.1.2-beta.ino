@@ -1,7 +1,3 @@
-#include <Wire.h>
-#include <LiquidCrystal_I2C.h>
-#include <DFRobot_VEML7700.h>
-#include <Servo.h>
 #include "GreenBox_Define.h"
 #include "GreenBox_Function.h"
 
@@ -21,7 +17,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  measure_sht30(); 
+  measure_sht30();
   measure_water();
   measure_VEML7700();
   control_wind();

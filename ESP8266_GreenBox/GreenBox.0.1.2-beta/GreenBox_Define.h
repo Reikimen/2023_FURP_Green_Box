@@ -1,3 +1,9 @@
+/////////////////////////////////////////////////////// Headers ///////////////////////////////////////////////////////
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <DFRobot_VEML7700.h>
+#include <Servo.h>
+
 /////////////////////////////////////////////////////// Hardwares ///////////////////////////////////////////////////////
 // Set the PINs of the detectors and the controlled hardwares
 // detectors
@@ -27,7 +33,10 @@ float water_depth = 0.0;
 // Lightness
 float VEML7700_light = 0.0;
 // CO2
-// The controlled datas, such as the speed of the wind
+float CO2_concentration = 0.0;
+
+///////////////////////////////////////////////////// Variables for control /////////////////////////////////////////////////////
+// The controlled variables, such as the speed of the wind (Global)
 int wind_force = 180;
 
 
