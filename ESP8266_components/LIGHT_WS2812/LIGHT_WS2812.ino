@@ -6,7 +6,7 @@
 
 #include <Adafruit_NeoPixel.h>
 
-#define PIN        14  //GPIO0接口
+#define PIN        14  //D5接口
 #define NUMPIXELS  15  //彩灯个数
 
 Adafruit_NeoPixel led(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
