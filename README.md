@@ -1,8 +1,6 @@
 # 2023_FURP_Green_Box
-We, the FURP project team, had the requirement to manufacture a plant box capable of culturing lettuce properly. 
-
-ver: 6.30 已敲定使用材料，用于7.10交付的硬件设计  
-已删除废案  
+已敲定使用材料，用于7.10交付的硬件设计  
+已删除之前设计的废案内容  
 PS: 因为本人使用的图床是SM.MS+Github，如果markdown中的图片无法打开，请科学上网
 # Intro
 本设计基于在7月10之前，我们FURP项目组要制造一个能够正常培养生菜的植物箱的要求。为了更好地继续项目制作的资料整理，在此整理了可用的资料和链接。我们计划先制作一个能够在本地使用单个或者多个MCU来控制的硬件系统，先使用Arduino IDE & vscode + platformIO 进行开发，后续再迁移到ESP-IDF框架里使用云服务。因为ESP-3Cmini这个板没有clk时钟pin脚，本地的控制计划使用能够I2C连接传感器的ESP8266开发板，而C3和S3已经不支持I2C了。ESP8266有足够的可编程引脚且有专用的扩展板。第一个阶段主要难点在于使用低电控制高电，还有如何获取一个可编程控制光照条件的LED灯源（功率足够，光强色温可调）。  
