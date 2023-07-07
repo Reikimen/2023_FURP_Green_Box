@@ -15,6 +15,8 @@ void setup() {
   LED_RGB.setBrightness(255);
   LED_RGB.setPixelColor(0,LED_RGB.Color(255, 255, 255)); //最高亮度白色，只亮第一个LED
   LED_RGB.show(); //刷新显示
+  pinMode(CO2_SENSOR_DATA_PIN, INPUT);
+  attachInterrupt(INTERRUPT_NUMBER, CO2_InterruptFunc, CHANGE);
 
   delay(2000); // the time used to setup
 }
@@ -24,6 +26,7 @@ void loop() {
   measure_sht30();
   measure_water();
   measure_VEML7700();
+  measure_CO2();
   control_wind();
   control_led_rgb();
   lcd_display();

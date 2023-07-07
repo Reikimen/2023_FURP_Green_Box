@@ -1,5 +1,5 @@
 // 删除了不必要的代码部分——2023/7/6——cdk
-#define CO2_SENSOR_DATA_PIN   (13)   // Sensor PWM interface
+#define CO2_SENSOR_DATA_PIN   (12)   // D6 Sensor PWM interface
 #define INTERRUPT_NUMBER   digitalPinToInterrupt(CO2_SENSOR_DATA_PIN)   // interrupt number
 
 // Used in interrupt, calculate pulse width variable

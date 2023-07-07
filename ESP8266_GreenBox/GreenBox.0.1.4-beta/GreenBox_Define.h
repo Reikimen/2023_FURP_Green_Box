@@ -14,6 +14,8 @@ DFRobot_VEML7700 VEML7700;   // address is 0x10
 // WATER
 #define PIN_WATER A0
 // CO2
+#define CO2_SENSOR_DATA_PIN   (12)   // GPIO 12 (D6) Sensor PWM interface
+#define INTERRUPT_NUMBER   digitalPinToInterrupt(CO2_SENSOR_DATA_PIN)   // interrupt number
 
 // The output hardwares's DEFINE (WIND & LIGHT)
 // LCD1602
@@ -38,7 +40,12 @@ float water_depth = 0.0;
 // Lightness
 float VEML7700_light = 0.0;
 // CO2
-float CO2_concentration = 0.0; // 暂未使用
+// float CO2_pwm_high_val_ms = 0.0;
+// float CO2_concentration = 0.0;
+volatile unsigned long CO2_pwm_high_start_ticks=0, CO2_pwm_high_end_ticks=0;// Used in interrupt, calculate pulse width variable
+volatile unsigned long CO2_pwm_high_val=0, CO2_pwm_low_val=0;
+volatile uint8_t CO2_flag=0;// interrupt flag
+
 
 ///////////////////////////////////////////////////// Variables for Output /////////////////////////////////////////////////////
 // The variables for controlled output values, such as the speed of the wind (Global)
