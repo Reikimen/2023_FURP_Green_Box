@@ -3,3 +3,4 @@ GreenBox.0.1.1-beta		7月4日 使用SG90调节风扇转速，LCD显示，测SHT�
 GreenBox.0.1.2-beta		在上一个版本基础上，将项目分成了多文件，并且通过硬件校验，将水位传感器的引脚设置从 0 改为 A0，CDK
 GreenBox.0.1.3-beta		修整头文件，增加灯带功能（单根），CDK
 GreenBox.0.1.4-beta		获取全部环境值在0.1.4实现，CO2的引脚换为gpio12, CDK
+GreenBox.0.1.5-beta		增加了一段测试风扇调速器位置的代码，放在注释内，CDK
