@@ -22,7 +22,7 @@ DFRobot_VEML7700 VEML7700;   // address is 0x10
 LiquidCrystal_I2C LCD1602(0x27,16,2); // Set the address of the LCD1602: 0x27
 // LED_WS2812
 #define PIN_LED_RGB 14 // GPIO 14 (D5)
-#define LED_RGB_NUMPIXELS 15 // 彩灯个数
+#define LED_RGB_NUMPIXELS 145 // 彩灯个数
 Adafruit_NeoPixel LED_RGB(LED_RGB_NUMPIXELS, PIN_LED_RGB, NEO_GRB + NEO_KHZ800);
 // SG90_WIND
 #define PIN_SG90_WIND 13  // GPIO 13 (D7)
@@ -40,8 +40,8 @@ float water_depth = 0.0;
 // Lightness
 float VEML7700_light = 0.0;
 // CO2
-// float CO2_pwm_high_val_ms = 0.0;
-// float CO2_concentration = 0.0;
+float CO2_pwm_high_val_ms = 0.0;
+float CO2_concentration = 0.0;
 volatile unsigned long CO2_pwm_high_start_ticks=0, CO2_pwm_high_end_ticks=0;// Used in interrupt, calculate pulse width variable
 volatile unsigned long CO2_pwm_high_val=0, CO2_pwm_low_val=0;
 volatile uint8_t CO2_flag=0;// interrupt flag

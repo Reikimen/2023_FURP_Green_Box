@@ -93,7 +93,7 @@ void measure_CO2()
 {
     if(CO2_flag == 4){
     CO2_flag = 1;
-    float CO2_pwm_high_val_ms = (CO2_pwm_high_val * 1000.0) / (CO2_pwm_low_val + CO2_pwm_high_val);
+    CO2_pwm_high_val_ms = (CO2_pwm_high_val * 1000.0) / (CO2_pwm_low_val + CO2_pwm_high_val);
 
     if (CO2_pwm_high_val_ms < 0.01){
       Serial.println("Fault");
@@ -102,7 +102,7 @@ void measure_CO2()
       Serial.println("preheating");
     }
     else if (CO2_pwm_high_val_ms < 998.00){
-      float CO2_concentration = (CO2_pwm_high_val_ms - 2) * 5;
+      CO2_concentration = (CO2_pwm_high_val_ms - 2) * 5;
       // Print pwm_high_val_ms
       Serial.print("CO2_pwm_high_val_ms:");
       Serial.print(CO2_pwm_high_val_ms);
@@ -133,8 +133,8 @@ void control_wind(){
 // LED
 void control_led_rgb(){
   LED_RGB.setBrightness(LED_RGB_Brightness);
-  for (LED_kapa = 0; LED_kapa < 15; LED_kapa = LED_kapa + 1){
-    LED_RGB.setPixelColor(LED_kapa,LED_RGB.Color(LED_R, LED_G, LED_B)); //红色
+  for (LED_kapa = 0; LED_kapa < LED_RGB_NUMPIXELS-1; LED_kapa = LED_kapa + 1){
+    LED_RGB.setPixelColor(LED_kapa,LED_RGB.Color(LED_R, LED_G, LED_B)); //RGB
     LED_RGB.show(); //刷新显示
   }
 }
@@ -172,9 +172,9 @@ void lcd_display(){
   LCD1602.setCursor(0, 0);//光标移动到第1行的第1个字符开始显示
   LCD1602.print("CO2: ");
   LCD1602.setCursor(6, 0);//光标移动到第1行的第7个字符开始显示
-  LCD1602.print("");
+  LCD1602.print(CO2_concentration);
   LCD1602.setCursor(11, 0);//光标移动到第1行的第12个字符开始显示
-  LCD1602.print(" ?");
+  LCD1602.print(" ppm");
 
   LCD1602.setCursor(0, 1);//光标移动到第2行的第1个字符
   LCD1602.print("Light:");
