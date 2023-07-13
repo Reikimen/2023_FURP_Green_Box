@@ -54,7 +54,7 @@ int wind_force = 180;
 // LIGHT
 int LED_R = 255;
 int LED_G = 255;
-int LED_B = 0;
+int LED_B = 255;
 int LED_RGB_Brightness = 120;
 int LED_kapa = 0;
 

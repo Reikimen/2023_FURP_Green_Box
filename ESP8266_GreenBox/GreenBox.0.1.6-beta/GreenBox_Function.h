@@ -118,6 +118,79 @@ void measure_CO2()
   delay(100);
 }
 
+// Wattmeter 功率计初始化
+void wattmeter_initialization(){
+  // Wattmeter_fan
+  if (wattmeter_ina219_fan.begin() != true) {
+    Serial.println("INA219_FAN begin faild");
+    wattmeter_flag_fan = 0;
+    delay(100);
+  } else {
+    wattmeter_flag_fan = 1;
+    wattmeter_ina219_fan.linearCalibrate(ina219Reading_mA_fan, extMeterReading_mA_fan);
+  }
+
+  // Wattmeter_RGB_LED
+  if (wattmeter_ina219_RGB_LED.begin() != true) {
+    Serial.println("INA219_RGB_LED begin faild");
+    wattmeter_flag_RGB_LED = 0;
+    delay(100);
+  } else {
+    wattmeter_flag_RGB_LED = 1;
+    wattmeter_ina219_RGB_LED.linearCalibrate(ina219Reading_mA_RGB_LED, extMeterReading_mA_RGB_LED);
+  }
+
+  // Wattmeter_semiconductor_cooling
+  if (wattmeter_ina219_semiconductor_cooling.begin() != true) {
+    Serial.println("INA219_semiconductor_cooling begin faild");
+    wattmeter_flag_semiconductor_cooling = 0;
+    delay(100);
+  } else {
+    wattmeter_flag_semiconductor_cooling = 1;
+    wattmeter_ina219_semiconductor_cooling.linearCalibrate(ina219Reading_mA_semiconductor_cooling, extMeterReading_mA_semiconductor_cooling);
+  }
+}
+
+void measure_wattmeter(){
+  // Wattmeter 示数 fan
+  if (wattmeter_flag_fan == 1){
+    BusVoltage_fan = wattmeter_ina219_fan.getBusVoltage_V();
+    ShuntVoltage_fan = wattmeter_ina219_fan.getShuntVoltage_mV();
+    current_fan = wattmeter_ina219_fan.getCurrent_mA();
+    power_fan = wattmeter_ina219_fan.getPower_mW();
+  } else {
+    BusVoltage_fan = 0;
+    ShuntVoltage_fan = 0;
+    current_fan = 0;
+    power_fan = 0;
+  }
+  // Wattmeter 示数 RGB_LED
+  if (wattmeter_flag_RGB_LED == 1){
+    BusVoltage_RGB_LED = wattmeter_ina219_RGB_LED.getBusVoltage_V();
+    ShuntVoltage_RGB_LED = wattmeter_ina219_RGB_LED.getShuntVoltage_mV();
+    current_RGB_LED = wattmeter_ina219_RGB_LED.getCurrent_mA();
+    power_RGB_LED = wattmeter_ina219_RGB_LED.getPower_mW();
+  } else {
+    BusVoltage_RGB_LED = 0;
+    ShuntVoltage_RGB_LED = 0;
+    current_RGB_LED = 0;
+    power_RGB_LED = 0;
+  }
+  // Wattmeter 示数 semiconductor_cooling
+  if (wattmeter_flag_semiconductor_cooling == 1){
+    BusVoltage_semiconductor_cooling = wattmeter_ina219_semiconductor_cooling.getBusVoltage_V();
+    ShuntVoltage_semiconductor_cooling = wattmeter_ina219_semiconductor_cooling.getShuntVoltage_mV();
+    current_semiconductor_cooling = wattmeter_ina219_semiconductor_cooling.getCurrent_mA();
+    power_semiconductor_cooling = wattmeter_ina219_semiconductor_cooling.getPower_mW();
+  } else {
+    BusVoltage_semiconductor_cooling = 0;
+    ShuntVoltage_semiconductor_cooling = 0;
+    current_semiconductor_cooling = 0;
+    power_semiconductor_cooling = 0;
+  }
+  
+}
+
 /////////////////////////////////////////////////////// Outputs ///////////////////////////////////////////////////////
 // SG90_WIND
 void control_wind(){
@@ -163,7 +236,7 @@ void lcd_display(){
   LCD1602.print(sht30_humidity);
   LCD1602.setCursor(11, 1);//光标移动到第1行的第12个字符开始显示
   LCD1602.print(" RH%");
-  delay(3000);
+  delay(2000);
 
   // CO2 & light
   LCD1602.clear();
@@ -180,7 +253,7 @@ void lcd_display(){
   LCD1602.print(VEML7700_light);
   LCD1602.setCursor(11, 1);//光标移动到第1行的第12个字符开始显示
   LCD1602.print(" lx");
-  delay(3000);
+  delay(2000);
 
   // water depth 
   LCD1602.clear();
@@ -190,7 +263,7 @@ void lcd_display(){
   LCD1602.print(water_depth);
   LCD1602.setCursor(11, 0);//光标移动到第1行的第12个字符开始显示
   LCD1602.print(" cm");
-  delay(1500);
+  delay(1000);
 }
 
 ////////////////////////////////////////////////// Control Logic //////////////////////////////////////////////////
