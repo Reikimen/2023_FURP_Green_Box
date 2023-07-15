@@ -6,4 +6,5 @@ GreenBox.0.1.4-beta		获取全部环境值在0.1.4实现，CO2的引脚换为gpi
 GreenBox.0.1.5-beta		增加了一段测试风扇调速器位置的代码，CDK
 GreenBox.0.1.6-beta		增加了wattmeter，总共3个wattmeter，调整光照配比为6：1：4，CDK
 GreenBox.0.1.7-beta		增加了WiFi连接，设置IP为192, 168, 100, 100，新增光照的控制函数，CDK
-GreenBox.0.2.0-beta		a copy of 0.1.7
+GreenBox.0.2.0-beta		a copy of 0.1.7，CDK
+GreenBox.0.2.1-beta		将loop中，显示数据，以及各个传感器的监测时间轴分开，CDK

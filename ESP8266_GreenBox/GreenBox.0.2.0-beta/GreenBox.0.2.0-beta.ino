@@ -1,6 +1,6 @@
 #include "GreenBox_Define.h"
 #include "GreenBox_Function.h"
-// https://blog.csdn.net/tongyue/article/details/105305280
+
 void setup() {
   // put your setup code here, to run once:
   // ESP8266 initialization
