@@ -22,7 +22,7 @@ void measure_sht30(){
   Wire.write(0x2C);
   Wire.write(0x06);
   Wire.endTransmission();
-  //delay(100);
+  delay(100);
   //停止IIC，并且等待sht30的读数
 
   //请求获取6字节的数据，然后会存到8266的内存里
@@ -250,6 +250,7 @@ void lcd_display_Temp_Humidity(){
   LCD1602.print(sht30_humidity);
   LCD1602.setCursor(11, 1);//光标移动到第1行的第12个字符开始显示
   LCD1602.print(" RH%");
+
 } 
 
 void lcd_display_CO2_Light(){
@@ -268,6 +269,7 @@ void lcd_display_CO2_Light(){
   LCD1602.print(VEML7700_light);
   LCD1602.setCursor(11, 1);//光标移动到第1行的第12个字符开始显示
   LCD1602.print(" lx");
+
 }
 void lcd_display_water(){
   // water depth 
@@ -278,6 +280,7 @@ void lcd_display_water(){
   LCD1602.print(water_depth);
   LCD1602.setCursor(11, 0);//光标移动到第1行的第12个字符开始显示
   LCD1602.print(" cm");
+
 }
 
 ////////////////////////////////////////////////// Control Logic //////////////////////////////////////////////////
@@ -295,15 +298,20 @@ void setup_function(){
   WiFi_connection();
   // Hardware initialization
   lcd_init(); // hello Liang delay 2000
-  VEML7700.begin(); // Light
-  SG90_WIND.attach(PIN_SG90_WIND);
   LED_RGB.begin();
   LED_RGB.setBrightness(255);
   LED_RGB.setPixelColor(0,LED_RGB.Color(255, 255, 255)); //最高亮度白色，只亮第一个LED
   LED_RGB.show(); //刷新显示
+  VEML7700.begin(); // Light
+  SG90_WIND.attach(PIN_SG90_WIND);
   wattmeter_initialization();
   pinMode(CO2_SENSOR_DATA_PIN, INPUT);
   attachInterrupt(INTERRUPT_NUMBER, CO2_InterruptFunc, CHANGE);
+
+  delay(2000); // the time used to setup
+
+  control_led_rgb();
+  delay(2000);
 }
 ////////////////////////////////////////////////// Loop Function //////////////////////////////////////////////////
 void loop_function(){
@@ -339,7 +347,7 @@ void loop_function(){
     count_wattmeter = 0; 
     measure_wattmeter();
   }
-  if (count_wind >= 120){ // 60000ms = 1min 更改一次
+  if (count_wind >= 12){ // 6000ms = 10s 更改一次
     count_wind = 0;
     control_wind();
   }
@@ -347,14 +355,17 @@ void loop_function(){
     count_led = 0;
     control_led_rgb();
   }
-  if (count_lcd = 5){ // 根据显示的需求可以调整
+
+  if (count_lcd == 5){ // 根据显示的需求可以调整
     lcd_display_Temp_Humidity();
   }
-  else if (count_lcd = 10){
+  if (count_lcd == 10){
     lcd_display_CO2_Light();
   }
-  else if (count_lcd >= 13){
+  if (count_lcd >= 15){
     count_lcd = 0;
-    lcd_display_water();
+    lcd_display_water();  
   }
+  
+  delay(500); // 500 milliseconds as a unit of time measurement
 }

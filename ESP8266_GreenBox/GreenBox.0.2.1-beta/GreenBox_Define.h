@@ -115,6 +115,6 @@ int count_water = 0; // 5000ms 监测一次
 int count_light = 0; // 1000ms 监测一次
 int count_CO2 = 0; // 1000ms 监测一次
 int count_wattmeter = 0; // 1000ms 监测一次
-int count_wind = 0; // 60000ms = 1min 更改一次
+int count_wind = 0; // 6000ms 更改一次
 int count_led = 0; // 5000ms 更改一次
 int count_lcd = 0; // 根据显示的需求可以调整
