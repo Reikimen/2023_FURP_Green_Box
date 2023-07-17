@@ -8,3 +8,5 @@ GreenBox.0.1.6-beta		增加了wattmeter，总共3个wattmeter，调整光照配�
 GreenBox.0.1.7-beta		增加了WiFi连接，设置IP为192, 168, 100, 100，新增光照的控制函数，CDK
 GreenBox.0.2.0-beta		a copy of 0.1.7，CDK
 GreenBox.0.2.1-beta		将loop中，显示数据，以及各个传感器的监测时间轴分开，CDK
+GreenBox.0.2.2-beta		解决了0.2.1当WiFi连接失败依旧尝试连接的问题，一分钟的连接失败后，使用LCD显示连接失败并且跳过WiFi连接
+			增加了当WiFi连接成功后，显示IP地址的功能
