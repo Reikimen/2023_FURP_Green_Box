@@ -1,3 +1,0 @@
-In this folder, the usages of different components is added.
-The use of each component is illustrated with a project.
-Also, the "I2C_address_search" is used to test whether the ESP8266 board could use properly.

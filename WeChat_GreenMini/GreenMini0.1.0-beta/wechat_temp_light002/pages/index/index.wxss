@@ -1,0 +1,36 @@
+page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+    Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei',
+    sans-serif;
+}
+.title{
+  text-align: center;
+  font-size: large;
+  margin-bottom: 15px;
+  margin-top:3px;
+}
+
+.pic{
+  text-align: center;
+  margin-top:20px;
+}
+
+.wendu{
+  margin-top:5px;
+}
+
+.light{
+  margin-top:30px;
+}
+
+.light2{
+  margin-top:30px;
+  text-align: center;
+}
+
+.dataTime{
+  color: rgba(69, 90, 100, 0.6);
+  margin-left: 12px;
+  margin-top: 10px;
+  font-size: 12px;
+}
