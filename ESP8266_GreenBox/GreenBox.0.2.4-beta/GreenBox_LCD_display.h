@@ -93,7 +93,7 @@ void lcd_display_wattmeter(int lcd_kapa) {
 
       LCD1602.setCursor(0, 1);  //光标移动到第2行的第1个字符
       LCD1602.print("Shunt:");
-      LCD1602.setCursor(9, 1);  //光标移动到第2行的第8个字符开始显示
+      LCD1602.setCursor(7, 1);  //光标移动到第2行的第8个字符开始显示
       LCD1602.print(ShuntVoltage_fan);
       LCD1602.setCursor(12, 1);  //光标移动到第2行的第12个字符开始显示
       LCD1602.print(" mV");
@@ -102,8 +102,8 @@ void lcd_display_wattmeter(int lcd_kapa) {
     }
     case 11: { // fan 电流，功率
       LCD1602.setCursor(0, 0);  //光标移动到第1行的第1个字符开始显示
-      LCD1602.print("Current: ");
-      LCD1602.setCursor(9, 0);  //光标移动到第1行的第10个字符开始显示
+      LCD1602.print("Curr: ");
+      LCD1602.setCursor(7, 0);  //光标移动到第1行的第10个字符开始显示
       LCD1602.print(current_fan);
       LCD1602.setCursor(12, 0);  //光标移动到第1行的第12个字符开始显示
       LCD1602.print(" mA");
@@ -112,7 +112,7 @@ void lcd_display_wattmeter(int lcd_kapa) {
       LCD1602.print("Power:");
       LCD1602.setCursor(7, 1);  //光标移动到第2行的第8个字符开始显示
       LCD1602.print(power_fan);
-      LCD1602.setCursor(11, 1);  //光标移动到第2行的第12个字符开始显示
+      LCD1602.setCursor(13, 1);  //光标移动到第2行的第12个字符开始显示
       LCD1602.print(" mW");
 
       break;
@@ -128,7 +128,7 @@ void lcd_display_wattmeter(int lcd_kapa) {
 
       LCD1602.setCursor(0, 1);  //光标移动到第2行的第1个字符
       LCD1602.print("Shunt:");
-      LCD1602.setCursor(9, 1);  //光标移动到第2行的第8个字符开始显示
+      LCD1602.setCursor(7, 1);  //光标移动到第2行的第8个字符开始显示
       LCD1602.print(ShuntVoltage_RGB_LED);
       LCD1602.setCursor(12, 1);  //光标移动到第2行的第12个字符开始显示
       LCD1602.print(" mV");
@@ -137,8 +137,8 @@ void lcd_display_wattmeter(int lcd_kapa) {
     }
     case 21: { // RGB_LED 电流，功率
       LCD1602.setCursor(0, 0);  //光标移动到第1行的第1个字符开始显示
-      LCD1602.print("Current: ");
-      LCD1602.setCursor(9, 0);  //光标移动到第1行的第10个字符开始显示
+      LCD1602.print("Curr: ");
+      LCD1602.setCursor(7, 0);  //光标移动到第1行的第10个字符开始显示
       LCD1602.print(current_RGB_LED);
       LCD1602.setCursor(12, 0);  //光标移动到第1行的第12个字符开始显示
       LCD1602.print(" mA");
@@ -147,7 +147,7 @@ void lcd_display_wattmeter(int lcd_kapa) {
       LCD1602.print("Power:");
       LCD1602.setCursor(7, 1);  //光标移动到第2行的第8个字符开始显示
       LCD1602.print(power_RGB_LED);
-      LCD1602.setCursor(11, 1);  //光标移动到第2行的第12个字符开始显示
+      LCD1602.setCursor(13, 1);  //光标移动到第2行的第12个字符开始显示
       LCD1602.print(" mW");
 
       break;
@@ -163,7 +163,7 @@ void lcd_display_wattmeter(int lcd_kapa) {
 
       LCD1602.setCursor(0, 1);  //光标移动到第2行的第1个字符
       LCD1602.print("Shunt:");
-      LCD1602.setCursor(9, 1);  //光标移动到第2行的第8个字符开始显示
+      LCD1602.setCursor(7, 1);  //光标移动到第2行的第8个字符开始显示
       LCD1602.print(ShuntVoltage_semiconductor_cooling);
       LCD1602.setCursor(12, 1);  //光标移动到第2行的第12个字符开始显示
       LCD1602.print(" mV");
@@ -172,8 +172,8 @@ void lcd_display_wattmeter(int lcd_kapa) {
     }
     case 31: { // semiconductor_cooling 电流，功率
       LCD1602.setCursor(0, 0);  //光标移动到第1行的第1个字符开始显示
-      LCD1602.print("Current: ");
-      LCD1602.setCursor(9, 0);  //光标移动到第1行的第10个字符开始显示
+      LCD1602.print("Curr: ");
+      LCD1602.setCursor(7, 0);  //光标移动到第1行的第10个字符开始显示
       LCD1602.print(current_semiconductor_cooling);
       LCD1602.setCursor(12, 0);  //光标移动到第1行的第12个字符开始显示
       LCD1602.print(" mA");
@@ -182,7 +182,7 @@ void lcd_display_wattmeter(int lcd_kapa) {
       LCD1602.print("Power:");
       LCD1602.setCursor(7, 1);  //光标移动到第2行的第8个字符开始显示
       LCD1602.print(power_semiconductor_cooling);
-      LCD1602.setCursor(11, 1);  //光标移动到第2行的第12个字符开始显示
+      LCD1602.setCursor(13, 1);  //光标移动到第2行的第12个字符开始显示
       LCD1602.print(" mW");
 
       break;

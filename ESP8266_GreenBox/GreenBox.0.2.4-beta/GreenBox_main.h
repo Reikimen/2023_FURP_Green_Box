@@ -75,10 +75,10 @@ void loop_function() {
     lcd_display_CO2_Light();
   }
   if (count_lcd == 15) {
-    lcd_display_wattmeter(20);
+    lcd_display_wattmeter(30);
   }
   if (count_lcd == 20) {
-    lcd_display_wattmeter(21);
+    lcd_display_wattmeter(31);
   }
   if (count_lcd >= 25) {
     count_lcd = 0;
