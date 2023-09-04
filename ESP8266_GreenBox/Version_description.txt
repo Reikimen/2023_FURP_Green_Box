@@ -10,4 +10,5 @@ GreenBox.0.2.0-beta		a copy of 0.1.7，CDK
 GreenBox.0.2.1-beta		将loop中，显示数据，以及各个传感器的监测时间轴分开，CDK
 GreenBox.0.2.2-beta		解决了0.2.1当WiFi连接失败依旧尝试连接的问题，一分钟的连接失败后，使用LCD显示连接失败并且跳过WiFi连接
 			增加了当WiFi连接成功后，显示IP地址的功能
-GreenBox.0.2.3-beta	         增加了光量子传感器，功率计的地址设置做了注释，但是水位计的引脚A0还未修改，ZZX
+GreenBox.0.2.3-beta	         	增加了光量子传感器，功率计的地址设置做了注释，但是水位计的引脚A0还未修改，ZZX
+GreenBox.0.2.4-beta		修改了LCD1602的显示, CDK

@@ -4,9 +4,5 @@
 #include "GreenBox_LCD_display.h"
 #include "GreenBox_WiFi.h"
 #include "GreenBox_main.h"
-void setup() {
-  setup_function();
-}
-void loop() {
-  loop_function();
-}
+void setup() {setup_function();}
+void loop() {loop_function();}
