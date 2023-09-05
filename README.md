@@ -275,14 +275,14 @@ The componnent should be added for the next release: ESP32 CAM
 flowchart
 ### 4.1.1 Pin distribution diagram
 
-| component | function | pin |
-: | : | : -- -- -- - : | : - : |
+| Component | Function | Pin |
+|:---:|:---:|:---:|
 | Hina | Miyako | Elubo |
 | Hina | Miyako | Elubo |
 
-### 4.1.2 Function Function table
-| function name | Function | Remarks |
-| : - | : - | : - |
+### 4.1.2 Function table of Functions 
+| Name| Function | Remarks |
+|:---:|:---:|:---:|
 | Hina | Ilupo | Mihua |
 | Hina | Ilupo | Mihua |
 
