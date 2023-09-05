@@ -1,166 +1,168 @@
 # 2023_FURP_Green_Box
-已敲定使用材料，用于7.10交付的硬件设计  
-已删除之前设计的废案内容  
-PS: 因为本人使用的图床是SM.MS+Github，如果markdown中的图片无法打开，请科学上网
+Materials have been finalized for use in the hardware design for 7.10 delivery
+Previously designed scrap case content has been removed
+PS: Because the picture bed I use is SM.MS+Github, if the picture in markdown cannot be opened, please scientific Internet
 # Intro
-本设计基于在7月10之前，我们FURP项目组要制造一个能够正常培养生菜的植物箱的要求。为了更好地继续项目制作的资料整理，在此整理了可用的资料和链接。我们计划先制作一个能够在本地使用单个或者多个MCU来控制的硬件系统，先使用Arduino IDE & vscode + platformIO 进行开发，后续再迁移到ESP-IDF框架里使用云服务。因为ESP-3Cmini这个板没有clk时钟pin脚，本地的控制计划使用能够I2C连接传感器的ESP8266开发板，而C3和S3已经不支持I2C了。ESP8266有足够的可编程引脚且有专用的扩展板。第一个阶段主要难点在于使用低电控制高电，还有如何获取一个可编程控制光照条件的LED灯源（功率足够，光强色温可调）。  
+This design is based on the requirement of our FURP project team to produce a plant box capable of growing lettuce properly by July 10. In order to better continue the documentation of the project production, the available materials and links are organized here. We plan to create a hardware system that can be controlled locally by a single or multiple MCUS, develop it with Arduino IDE & vscode + platformIO at first, and then migrate to the ESP-IDF framework to use cloud services. Because the ESP-3Cmini does not have a clk clock pin, the local control plan is to use the ESP8266 development board that can connect to the sensor I2C, while the C3 and S3 no longer support I2C. The ESP8266 has plenty of programmable pins and a dedicated expansion board. The main difficulty in the first stage is to use low power to control high power, and how to obtain an LED lamp source that can programmatically control the lighting conditions (enough power, light intensity color temperature can be adjusted).
 
-而在本地的控制实现后，主要难点将转变为，如何使用云服务来实现一个APP或者微信小程序的交互。 
+After the implementation of local control, the main difficulty will change to how to use cloud services to achieve an APP or wechat mini program interaction.
 
-此外，本计划书还将说明引脚的分配，并且给出分配理由。最后，还将附上函数的功能表，命名规则为"chatGpt"式，以方便日后的维护。如下为本设计的大致框架。
+In addition, the plan will also explain the allocation of pins and give reasons for the allocation. Finally, the function list will be attached, named "chatGpt" style, to facilitate future maintenance. The following is the general framework of this design.
 
 ## Current features and future prospects
-当前功能:  
-- 可以监测：光照，温度，湿度，二氧化碳浓度 以及 水位
-- 不同的传感器以不同的周期采集数据，500ms为最小采集时间单位
-- 使用RGB灯带进行补光，可调亮度和RGB配比
-- 连接移动WiFi，设置了固定的ip地址保证访问
+Current features:
+- Can monitor: light, temperature, humidity, carbon dioxide concentration and water level
+- Different sensors collect data at different periods, with 500ms as the minimum acquisition time unit
+- Use RGB light strip to fill light, adjustable brightness and RGB ratio
+- Connected to mobile WiFi, set a fixed ip address to ensure access
+- Power monitoring
 
-设计增加的功能:
-- 功率监测
-- 在本地保存数据（可能使用树莓派保存）
-- 远程固件更新，使用OTA技术
+Design added functionality: (partially implemented)
+- Save data locally (possibly using Raspberry PI)
+- Remote firmware update, using OTA technology
 
-未来展望：
-- 使用局域网下的网页进行控制
-- 使用APP/微信小程序来控制
-- 使用 ESP32-CAM 远程监测
-
+Future outlook: (partially realized)
+- Use web pages on the LAN for control
+- Use APP/ wechat mini program to control
+- Remote monitoring using ESP32-CAM
 
 ## Timeline
-- 6.28 下一次会议，(进实验室，采购回来的材料放的位置)
-- 6.30 计划敲定选用的元件，因为部分元件功能相同，需要测试
-- 7.05 下一次会议，最后一次采购
-- 7.10 Tony 要求的本地控制的方案，因为蔬菜种植需要时间（未进实验室顺延）
-- 7.17 下种，使用0.2.1以上版本进行控制
+- 6.28 Next meeting, (Enter the laboratory and place the purchased materials)
+- 6.30 Plan to finalize the selected components, as some components have the same function and need to be tested
+- 7.05 Next meeting, last purchase
+- 7.10 Local control scheme required by Tony, because vegetable cultivation takes time (it will be postponed if it is not in the laboratory)
+- 7.17 Planting, use version 0.2.1 or above for control
+- 8.01 The first generation experiment is finished, and the second generation plant box is made
+- 8.10 Sufficient technical accumulation is achieved, the project is temporarily suspended, and the external design and manufacturing of the plant box is completed
 
 ## Contents
-- 0.0 ESP8266 基础信息
-- 1.0 传感器
-    - 1.1 温湿度传感器(sht30)
-    - 1.2 CO2传感器
-    - 1.3 PH传感器(不适用)
-    - 1.4 光敏传感器
-        - 1.4.1 光合有效辐射传感器
-        - 1.4.2 DFROBOT光线传感器
-    - 1.5 摄像（ESP32-CAM）
-    - 1.6 水位传感器
+- 0.0 Basic info of ESP8266
+- 1.0 Sensors
+    - 1.1 Temperature and Humidity Sensor (sht30)
+    - 1.2 CO2 Sensor
+    - 1.3 PH sensor (not applicable)
+    - 1.4 Photosensitive Sensor
+        - 1.4.1 Photosynthetically active radiation sensor (RS485/ Analog voltage)
+        - 1.4.2 DFROBOT light sensor
+    - 1.5 Camera (ESP32-CAM)
+    - 1.6 water level sensor
 
-- 2.0 被控元件
-    - 2.1 开关 & 空占比控制电压
-    - 2.2 照明灯
-    - 2.3 加热模块（硅胶）
-    - 2.4 制冷模块（半导体）
-    - 2.5 风扇（机箱风扇）
+- 2.0 Controlled component
+    - 2.1 Switch & Duty ratio control voltage
+    - 2.2 Lighting
+    - 2.3 Heating module (silicone)
+    - 2.4 Refrigeration module (Semiconductor)
+    - 2.5 Fans (Chassis fans)
     - 2.6 LCD1602
 
-- 3.0 能耗监测
-    - 3.1 ACS712-05B霍尔电流传感器
-    - 3.2 DFRobot Gravity:I2C数字功率计模块
-    - 3.3 能耗监测模块对传感器精度影响
+- 3.0 Energy consumption monitoring
+    - 3.1 ACS712-05B Hall Current sensor
+    - 3.2 DFRobot Gravity:I2C digital power meter module
+    - 3.3 Influence of energy consumption monitoring module on sensor accuracy
 
-- 4.0 系统框架图
-    - 4.0 硬件组成
-    - 4.1 程序框架
-        - 4.1.1 引脚分配图
-        - 4.1.2 函数功能表 
-    - 4.2 联网框架
-- 备注
+- 4.0 System framework diagram
+    - 4.0 Hardware components
+    - 4.1 Program framework
+        - 4.1.1 Pin distribution diagram
+        - 4.1.2 Function Function table
+    - 4.2 Networking Framework
+- Remarks
 
 
-# 0.0 ESP8266 基础信息
-ESP8266-DevKitC ⼊⻔指南：https://www.espressif.com/sites/default/files/documentation/ESP8266-DevKitC_getting_started_guide__CN.pdf  
-引脚功能详见ESP8266EX技术规格书 (主要参考资料)：https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex_datasheet_cn.pdf  
+# 0.0 Basic info of ESP8266
+ESP8266-DevKitC getting started guide CN: https://www.espressif.com/sites/default/files/documentation/ESP8266-DevKitC_getting_started_guide__CN.pdf  
+Pin functions are detailed in the ESP8266EX specification (main reference): https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex_datasheet_cn.pdf  
 
-如下为管脚排布：
+The pin layout is shown as follows:
 
 <div align = center>
 <img height = '350' img src="https://cdn.jsdelivr.net/gh/Reikimen/Image@main/furp/ESP8266.png"/>
 </div>
 
-有用的博客：  
-WiFi-ESP8266入门开发(十一)-使用PWM: https://blog.csdn.net/solar_Lan/article/details/79249083
+A usefull blog:   
+WiFi-ESP8266 Getting Started with Development(11) - Using PWM: https://blog.csdn.net/solar_Lan/article/details/79249083
 
-# 1.0 传感器
-## 1.1 温湿度传感器
-目前使用的温湿度传感器更改为：SHT30 防水数字IIC湿度探头  
+# 1.0 Sensors
+## 1.1 Temperature and Humidity Sensor (sht30)
+The current temperature and humidity sensor is changed to: SHT30 waterproof digital IIC humidity probe  
 sht40 datasheet: https://sensirion.com/media/documents/33FD6951/640B22DB/Datasheet_SHT4x.pdf   
-(sht40)需要安装arduino的库，因此不知道是否适合之后的使用
+(sht40) requires the installation of arduino's library, so I don't know if it is suitable for future use
 
-如下为引脚图，本次购买的均为A版
+The following is the pin diagram, this purchase is version A
 
-接线方式为D2(GPIO4)接SHT30 的 SDA，D1(GPIO5)接SHT30 的 SCL，然后SHT30是3.3V驱动  
+D2(GPIO4) connects to the SDA of the SHT30, D1(GPIO5) connects to the SCL of the SHT30, and the SHT30 is driven by 3.3V  
 <div align = center>
 <a href="https://sm.ms/image/r3wBQYuFz4Lt7Nm" target="_blank">
 <img height = '400' img src="https://s2.loli.net/2023/06/23/r3wBQYuFz4Lt7Nm.png" ></a>
 </div>
-目前，温度传感模块没有定制线长，焊接杜邦线，使用I2C的方式连接到ESP8266上。 
+At present, the temperature sensing module has no custom wire length, welded duPont wire, and is connected to the ESP8266 by means of I2C. 
 
-以下为一些可以借鉴的博客：  
-ESP8266/32 (Arduino)驱动SHT30获取温湿度：https://blog.csdn.net/qq_43415898/article/details/115529460  
-Arduino ESP8266实现无线温湿度监测：https://blog.csdn.net/mbjxking/article/details/117406101  
+Here are some blogs to learn from:   
+ESP8266/32 (Arduino)Drives the SHT30 to obtain temperature and humidity: https://blog.csdn.net/qq_43415898/article/details/115529460  
+Arduino ESP8266 Realize wireless temperature and humidity monitoring: https://blog.csdn.net/mbjxking/article/details/117406101  
 
-## 1.2 CO2传感器
-- JW01 CO2传感器
-因为JW01-datasheet付费下载，附上链接。  
-JW01-CO2-V2.2数字信号空气质量模块规格书: https://max.book118.com/html/2022/0607/5143210143004240.shtm   
-以下为一些基本的属性：
+## 1.2 CO2 Sensor
+- JW01 CO2 Sensor
+Since JW01-datasheet's download is not free, the link is attached.  
+JW01-CO2-V2.2 Digital signal air quality module specification: https://max.book118.com/html/2022/0607/5143210143004240.shtm   
+Here is some basic property: 
 <a href="https://sm.ms/image/wYq8TIDLE9n4ZCm" target="_blank"><img height = '200' img src="https://s2.loli.net/2023/06/23/wYq8TIDLE9n4ZCm.png" ></a>  
-可能有用的资料：  
-淘宝上别的商家提供的教程：https://pan.baidu.com/s/1_tPl6m6C32AkPFusqbmOpw?pwd=426d  
-博客，micropython中使用jw01二氧化碳传感器获取数据: https://blog.csdn.net/limaning/article/details/131156686 （树莓派pico）  
+Information that may be useful:   
+Tutorials provided by other merchants on Taobao: https://pan.baidu.com/s/1_tPl6m6C32AkPFusqbmOpw?pwd=426d  
+Blog, using jw01 CO2 sensor to get data in micropython: https://blog.csdn.net/limaning/article/details/131156686 (raspberry pie pico)  
 
-- 最后选用的二氧化碳传感器：  
-Infrared CO2 Sensor 400-5000ppm 二氧化碳传感器模块  
+- Selected carbon dioxide sensor:  
+Infrared CO2 Sensor 400-5000ppm Carbon dioxide sensor module  
 <div align = center>
 <img height = '200' img src="https://cdn.jsdelivr.net/gh/Reikimen/Image@main/furp/20230706093204.png"/>
 </div>  
-相应的官网使用链接：  
+Corresponding official website link:  
 
 [SEN0219](https://wiki.dfrobot.com.cn/_SKU_SEN0219_Infrared_CO2_Sensor_400-5000ppm_%E4%BA%8C%E6%B0%A7%E5%8C%96%E7%A2%B3%E4%BC%A0%E6%84%9F%E5%99%A8%E6%A8%A1%E5%9D%97)
 
-## 1.3 PH传感器(不适用)
-选用的PH传感器为，可充型  
-如下为链接和密码  
-Password：z5cp
-Link：https://pan.baidu.com/s/1_DIqaSk_0aHw_fzwgiEt0w  
-根据资料，PH传感器不能长时间浸液体使用，因此目前不考虑使用
+## 1.3 PH sensor (not applicable)
+The selected PH sensor is fillable type  
+The following is the link and password:  
+Password: z5cp
+Link: https://pan.baidu.com/s/1_DIqaSk_0aHw_fzwgiEt0w  
+According to the data, the PH sensor cannot be used in liquid immersion for a long time, so it is not considered for use at present
 
-## 1.4 光敏传感器
-### 1.4.1 光合有效辐射传感器
-PS：这个链接里购买只需要259RMB：  
+## 1.4 Photosensitive Sensor
+### 1.4.1 Photosynthetically active radiation sensor (RS485/ Analog voltage)
+PS: The purchase in this link only costs RMB 259RMB:  
 https://item.taobao.com/item.htm?spm=a21n57.1.0.0.59f1523cDI8vUo&id=712234238518&ns=1&abbucket=0#detail
 
 <div align = center>
 <img height="340" img src="https://s2.loli.net/2023/06/25/tIZH1cUwzs3WN45.png"/>
 </div>
 
-使用的资料暂未找到，需要去跟店家要，并且不知道它的型号，下周找PHD使用他的传感器
+The voltage analog version of the sensor is supplied by PHD pony, but the readings are sometimes problematic  
+The data of RS485 usage has been found and put in the project, but due to time, tpye of RS485 has not been implemented
 
-### 1.4.2 DFROBOT光线传感器
-DFROBOT光线传感器：
+### 1.4.2 DFROBOT light sensor
+DFROBOT light sensor:
 https://wiki.dfrobot.com.cn/_SKU_SEN0228_Gravity_Digital_Ambient_Light_Sensor%E6%95%B0%E5%AD%97%E7%8E%AF%E5%A2%83%E5%85%89%E4%BC%A0%E6%84%9F%E5%99%A8
 
-供电电压：3.3~5V  
-工作电流：45uA  
-关断模式：0.5uA  
-接口：I2C  
-I2C地址：0x10  
+Power supply voltage: 3.3~5V  
+Working current: 45uA  
+Shutdown mode: 0.5uA  
+Interface: I2C  
+I2C address: 0x10  
 
-## 1.5 摄像（ESP32-CAM）
-安信可提供的资料:  
-安信可官网：https://docs.ai-thinker.com/esp32-cam  
-摄像头使用说明：https://docs.ai-thinker.com/_media/esp32_camera%E5%9B%BA%E4%BB%B6%E6%9B%B4%E6%96%B0%E8%AF%B4%E6%98%8E.pdf  
-ESP32-CAM规格书：https://docs.ai-thinker.com/_media/esp32/docs/esp32-cam_product_specification_zh.pdf  
-博客，教程ESP32-CAM摄像头开发demo 局域网拍照、实时视频、人脸识别: https://aithinker.blog.csdn.net/article/details/108000974  
-开发者社区：  
-博客，ESP32-CAM：规格、引脚排列和用户指南：https://blog.csdn.net/feiduoxuetang/article/details/119881722  
-博客，安信可ESP32-CAM摄像头开发demo--局域网拍照、实时视频、人脸识别：[ESP32-CAM]
+## 1.5 Camera (ESP32-CAM)
+The data provide by ai-thinker:  
+Official website: https://docs.ai-thinker.com/esp32-cam  
+Instructions of Esp32-CAM: https://docs.ai-thinker.com/_media/esp32_camera%E5%9B%BA%E4%BB%B6%E6%9B%B4%E6%96%B0%E8%AF%B4%E6%98%8E.pdf  
+Specification of ESP32-CAM: https://docs.ai-thinker.com/_media/esp32/docs/esp32-cam_product_specification_zh.pdf  
+Blog, tutorial ESP32-CAM camera development demo LAN photography, real-time video, face recognition: https://aithinker.blog.csdn.net/article/details/108000974  
+Developer community:  
+Blog, ESP32-CAM: Specifications, pin Arrangement, and User Guide: https://blog.csdn.net/feiduoxuetang/article/details/119881722  
+Blog, ESP32-CAM camera development demo- LAN photography, real-time video, face recognition: [ESP32-CAM]
 <div align = center>
 <img height="350" img src="https://cdn.jsdelivr.net/gh/Reikimen/Image@main/furp/ESP32-CAM-Pins.png"/>
 </div>
 
-## 1.6 水位传感器
+## 1.6 water level sensor
 <div align = center>
 <img height="200" img src="https://s2.loli.net/2023/06/27/IpnCbctMyzTEsGj.jpg"/>
 </div>
@@ -168,131 +170,136 @@ ESP32-CAM规格书：https://docs.ai-thinker.com/_media/esp32/docs/esp32-cam_pro
 <img height="236" img src="https://s2.loli.net/2023/06/27/hCgnMpGA9VvHFua.jpg"/>
 </div>
 
+After actual examination, it was found that the water level sensor caused the culture liquid crystals to precipitate due to contact with the liquid. In the future, it is hoped to use other indicators or measurement methods such as ultrasonic distance sensors or floats.  
 
-# 2.0 被控元件
-## 2.1 开关 & 空占比控制电压
-关于低电压控制高电压，PHD给出的建议是使用MOS管来控制电路的开合，可以自行打PCB来控制。但是网上找到的资料就只有如下链接内的（资料之间都是互相抄的），并且不清楚安全性。
+# 2.0 Controlled component
+## 2.1 Switch & Duty ratio control voltage
+For low voltage control of high voltage, PHD gives the recommendation is to use MOS tube to control the opening and closing of the circuit, which can be controlled by PCB. However, the information found on the Internet is only in the following links (the information is copied from each other), and it is not clear about the security.
 
-博客，mos 控制交流_如何用单片机控制220V交流电的通断：https://blog.csdn.net/weixin_39793553/article/details/111706552  
+Blog, mos Control AC _ How to use single-chip microcomputer to control 220V AC on and off: https://blog.csdn.net/weixin_39793553/article/details/111706552  
 
-## 2.2 照明灯
-原计划，购买了6根0.5m防水的LED植物粉光灯带。使用2根照明，4根照明，6根照明进行粗糙的3级补光照明。分别记为一档，二档，三档照明。  
+## 2.2 Lighting
+The original plan was to purchase six 0.5m waterproof LED plant-powder light belts. Use 2 illuminators, 4 illuminators, and 6 illuminators for rough 3 level fill lighting. They're in first, second and third gear.   
 
-设计方案B(6.27):
-使用电源适配器获得稳定的，能够提供大电流的5VDC电源, 改变空占比。
+Design Plan B(6.27):  
+Use a power adapter to obtain a stable 5VDC power supply capable of providing high current, varying the duty cycle.  
 
-然后使用可编程的RGB灯带，WS2812，使用MCU来控制颜色亮度。与白色的LED灯带混用，来打造一个偏红和偏蓝的灯源。PS：单一颜色的LED，例如红色LED灯能提供的波长范围较小，只有+-10nm不到的频谱区间  
+Then a programmable RGB light strip, WS2812, uses the MCU to control color brightness. Mix with white LED strips to create a red and blue light source. PS: A single color LED, such as a red LED lamp, can provide a small wavelength range, only +-10nm less than the spectrum  
 
 <div align = center> 
 <img height="600" img src="https://s2.loli.net/2023/06/27/dUAJf5OGF3MiQpa.jpg"/>
 </div>
 
-## 2.3 加热模块（硅胶）
-硅胶加热板安装方式
+Latest design solutions for the second generation of GreenBox:
+Twelve light strips are used, and the height of the lamps can be adjusted
 
-1.在平坦和光滑的工件上可以用压敏胶来粘接。
+## 2.3 Heating module (silicone)
+Silicone heating plate installation mode
 
-2.压敏胶的使用温度为：150℃连续，230℃瞬间。功率密度不超过0.9W/c㎡的场合。
+1. Pressure sensitive adhesive can be used to bond flat and smooth workpieces.
 
-3.涂复压敏胶的硅橡胶加热器在工厂出厂后半年内使用，否则会影响胶水的使用性能。
+2. The use temperature of pressure sensitive adhesive is: 150℃ continuous, 230℃ instant. The power density does not exceed 0.9W/c㎡.
 
-4.小型工件可以来工厂预制和硫化，可以确保加热板的使用寿命。
+3. The silicone rubber heater coated with pressure-sensitive adhesive should be used within six months after the factory leaves the factory, otherwise it will affect the performance of the glue.
 
-硅胶加热板使用说明
+4. Small workpieces can be prefabricated and vulcanized in the factory, which can ensure the service life of the heating plate.
 
-1.使用该类电热器件须注意，其持续使用工作温度应小于240℃，瞬时不超过300℃。
+Silicone heating plate instructions
 
-2.硅胶电热器件可工作与受压状态，即用辅助压板使其紧贴受热表面。热传导良好，在工作区温度不超过240℃时，其电流密度可达3W/c㎡ 。
+1. The use of such electric heating devices should pay attention to the continuous use of the operating temperature should be less than 240 °C, instantaneous not more than 300 °C.
 
-3.粘贴式安装工况下，允许工作温度小于150℃。
+2. The silicone electric heating device can work under pressure, that is, the auxiliary pressure plate makes it close to the heated surface. The heat conduction is good, and the current density can reach 3W/c㎡ when the temperature of the working area does not exceed 240℃.
 
-4.若是空中干烧况，受材料耐温限制，其电力密度应小于1 W/c㎡；非持续工况，电力密度可达1.4 W/c㎡ 。
+3. Under the adhesive installation condition, the allowable working temperature is less than 150℃.
 
-5.工作电压选取以大功率-高电压、小功率-低电压为原则，特殊需要可以列外。
+4. If the air dry burning condition is limited by the material temperature resistance, its power density should be less than 1 W/c㎡; In non-continuous condition, the power density can reach 1.4 W/c㎡.
 
-硅胶加热板制作工艺
+5. The working voltage selection is based on the principle of high-power - high voltage and low-power - low voltage, and special needs can be listed outside.
 
-不锈钢云母加热器是采用Cr20Ni80为发热体绕制在预制好绝缘体的云母上。然后用金属不锈钢皮、铁皮或铜皮为导热体制作而成。可以做成圈板等其它异性型产品。
+Silicone heating plate production process
 
-## 2.4 制冷模块（半导体）
-半导体制冷只能做到局部的降温。
+The stainless steel mica heater uses Cr20Ni80 as the heating body and is wound on the mica of prefabricated insulator. Then it is made of stainless steel, iron or copper for the heat conduction system. Can be made into ring plate and other heterosexual products.
+## 2.4 Refrigeration module (Semiconductor)
+Semiconductor refrigeration can only achieve local cooling, and the cooling effect is only about 0.5 degrees Celsius, but it is a good dehumidifier, only half an hour can dehumidify 10% relative humidity.
 
-## 2.5 风扇
+## 2.5 Fans (Chassis fans)
 
-购买的为，双风扇带调速器  
-购买链接：https://item.taobao.com/item.htm?spm=a230r.1.14.32.53497bc3hta7z1&id=702562582969&ns=1&abbucket=15#detail
+The purchased fan is a dual fan with a governor  
+Purchase Link: https://item.taobao.com/item.htm?spm=a230r.1.14.32.53497bc3hta7z1&id=702562582969&ns=1&abbucket=15#detail
 
 <div align = center>
 <img height = '300' img src="https://s2.loli.net/2023/06/25/EyAIST6tDBekdiF.png"/>
 </div>
 
-根据目前的设计来看，双风扇机箱风扇是合适的，并且可以做到无极调节。  
-但是我打算把它自带的适配器换成自己的12V电压的适配器，并且使用空占比来调节风扇功率（参考2.1）(PWM调节产生了巨大的噪声)
-因此，风扇的速度控制使用10K电阻分压器，使用SG90进行角度控制（不知道为啥手上这款只能转90°，但是也够用）
+According to the current design, the dual-fan chassis fan is suitable and can be adjusted without poles.  
+But I'm going to replace the adapter that comes with it with my own 12V voltage adapter, and use the duty ratio to adjust the fan power (see 2.1) (PWM regulation makes a lot of noise).  
+Therefore, the speed control of the fan uses 10K resistor divider, and the Angle control uses SG90 (I don't know why this model can only turn 90°, but it is enough).
 
 ### 2.6 LCD1602
-常用的液晶显示屏，I2C连接
+Commonly used LCD display, I2C connection
 
-# 3.0 能耗监测
-## 3.1 ACS712-05B霍尔电流传感器
-如下为datasheet链接：[ACS712]  
-博客，ACS712工作原理（20A为例）、设计及PCB布线：[ACS712工作原理（20A为例）、设计及PCB布线]
+# 3.0 Energy consumption monitoring
+## 3.1 ACS712-05B Hall Current sensor
+Link of datasheet:[ACS712]  
+Blog, ACS712 working principle (example of 20A) design and layout of PCB:[ACS712]
 
 <div align = center>
 <img height = '300' img src="https://s2.loli.net/2023/06/25/k82hDzeMmQHtXsS.png"/>
 </div>
 
-## 3.2 DFRobot Gravity:I2C数字功率计模块
-DFROBOT的资料：
+## 3.2 DFRobot Gravity:I2C digital power meter module
+Data provide by DFROBOT:
 https://wiki.dfrobot.com.cn/_SKU_SEN0291__Gravity_I2C%E6%95%B0%E5%AD%97%E5%8A%9F%E7%8E%87%E8%AE%A1#.E6.9B.B4.E5.A4.9A
 
-## 3.3 传感模块对传感器精度影响
-需要对比验证，根据实验具体情况具体分析 (江帆)
+## 3.3 Influence of energy consumption monitoring module on sensor accuracy
+Need comparative verification, according to the specific conditions of the experiment specific analysis (due to time, not yet tested. I personally think that the power consumption of the sensor is not high, so I only monitor the power consumption of the entire control system and the power consumption of the LED lamp belt)
 
-# 4.0 系统框架
-## 4.0 硬件组成
-GreenBox.v1.0.x-release 系统组成 
-一个LCD显示屏  
-一个温湿度传感器  
-一个二氧化碳传感器  
-一个光敏传感器  
-一个水位传感器  
-220转5V20A服务器电源 + 5个照明灯带  
-硅胶加热板(待调参) + MOS开关  
-半导体制冷器 + 220转12V电源 + MOS开关  
-220转12V2A电源适配器 + SG90 + 俩个风扇  
-能耗检测模块
+# 4.0 System framework diagram
+## 4.0 Hardware components
+GreenBox.v1.0.x-release system composition
+ 
+An LCD display
+A temperature and humidity sensor  
+A carbon dioxide sensor  
+A light sensor  
+A water level sensor  
+220 to 5V20A server power + 5 lighting belts  
+Silicone heating plate (to be adjusted) + MOS switch  
+Semiconductor cooler + 220 to 12V power supply + MOS switch  
+220 to 12V2A power adapter + SG90 + two fans  
+Energy consumption detection module  
 
-下一个小版本需要添加的：ESP32 CAM
+The componnent should be added for the next release: ESP32 CAM
 
-## 4.1 程序框架
+## 4.1 Program framework
 flowchart
-### 4.1.1 引脚分配图 *未定
+### 4.1.1 Pin distribution diagram
 
-|对应元件|功能|引脚|
-|:---:|:---:|:---:|
-|日奈|宫子|伊吕波|
-|日奈|宫子|伊吕波|
+| component | function | pin |
+: | : | : -- -- -- - : | : - : |
+| Hina | Miyako | Elubo |
+| Hina | Miyako | Elubo |
 
-### 4.1.2 函数功能表 *未定
-|函数名|函数作用|备注|
-|:---|:---|:---|
-|日奈|伊吕波|未花|
-|日奈|伊吕波|未花|
+### 4.1.2 Function Function table
+| function name | Function | Remarks |
+| : - | : - | : - |
+| Hina | Ilupo | Mihua |
+| Hina | Ilupo | Mihua |
 
-## 4.2 联网框架
-阿巴阿巴
-
-
-# 备注：
-我发现 DFROBOT 它提供的资料非常完整详细，包括datasheet，示例，以及操作教程等。如果之后购买元件，找它家买，它有个官网，https://www.dfrobot.com.cn/  
-还有比如它的二氧化碳传感器模块：
-[DFROBOT的二氧化碳传感器](https://wiki.dfrobot.com.cn/_SKU_SEN0159_CO2_%E4%BA%8C%E6%B0%A7%E5%8C%96%E7%A2%B3%E4%BC%A0%E6%84%9F%E5%99%A8%E6%A8%A1%E5%9D%97_V2)  
-
-SG90连接在ESP8266上时无法烧录（电脑USB口提供的电流不够大）（现在又莫名其妙能正常烧录了，可能是之前的底板的问题）
+## 4.2 Networking Framework
+/
 
 
-<!--链接-->
+# Remarkes
+I found DFROBOT to be very complete and detailed, including datasheet, examples, and how-to tutorials. If after buying components, find it home buying, it has a website, https://www.dfrobot.com.cn/   
+
+And then there's the CO2 sensor module:
+[DFROBOT CO2 Sensor](https://wiki.dfrobot.com.cn/_SKU_SEN0159_CO2_%E4%BA%8C%E6%B0%A7%E5%8C%96%E7%A2%B3%E4%BC%A0%E6%84%9F%E5%99%A8%E6%A8%A1%E5%9D%97_V2)  
+
+The SG90 cannot burn when connected to the ESP8266 (the current provided by the USB port of the computer is not high enough) (now it burns properly for some reason, probably because of the previous baseboard problem)  
+
+
+<!--Links-->
 [ESP32-CAM]:https://aithinker.blog.csdn.net/article/details/108000974?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-108000974-blog-119881722.235%5Ev38%5Epc_relevant_sort_base2&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-108000974-blog-119881722.235%5Ev38%5Epc_relevant_sort_base2&utm_relevant_index=1  
 
 [ACS712]:https://pdf1.alldatasheet.com/datasheet-pdf/view/168326/ALLEGRO/ACS712.html
@@ -300,4 +307,4 @@ SG90连接在ESP8266上时无法烧录（电脑USB口提供的电流不够大）
 [鱼缸风扇]:https://item.taobao.com/item.htm?id=706275939995&ali_refid=a3_430582_1006:1681220755:N:VPZbyjFm9B%2FIS43eeDd0Vb2Ozm4nW%2FMy:9bb9616dedbfcb7db77ebfef5eb30af8&ali_trackid=1_9bb9616dedbfcb7db77ebfef5eb30af8&spm=a21n57.1.0.0#detail
 
 
-[ACS712工作原理（20A为例）、设计及PCB布线]:https://blog.csdn.net/liulangqingchun444/article/details/124118521?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-124118521-blog-84340808.235%5Ev38%5Epc_relevant_anti_t3&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-124118521-blog-84340808.235%5Ev38%5Epc_relevant_anti_t3&utm_relevant_index=1
+[ACS712]:https://blog.csdn.net/liulangqingchun444/article/details/124118521?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-124118521-blog-84340808.235%5Ev38%5Epc_relevant_anti_t3&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-124118521-blog-84340808.235%5Ev38%5Epc_relevant_anti_t3&utm_relevant_index=1
